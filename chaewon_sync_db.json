@@ -1,0 +1,190 @@
+{
+  "updatedAt": 1792377548051,
+  "todos": [
+    {
+      "id": "t1",
+      "title": "[고등부] 고1 공통수학·고2 미적분 내신 심화 킬러문항 손풀이 제작",
+      "category": "math",
+      "subTag": "고등부",
+      "dueDate": "2026-10-19",
+      "urgent": true,
+      "completed": false,
+      "createdAt": 1792359548051
+    },
+    {
+      "id": "t2",
+      "title": "[중등부] 중2 일차함수 & 도형의 닮음 주간 테스트 오답 프린트 인쇄",
+      "category": "math",
+      "subTag": "중등부",
+      "dueDate": "2026-10-19",
+      "urgent": false,
+      "completed": false,
+      "createdAt": 1792363148051
+    },
+    {
+      "id": "t3",
+      "title": "[초등부] 초5·초6 분수 연산 교재 채점 및 학부모 피드백 문자 발송",
+      "category": "math",
+      "subTag": "초등부",
+      "dueDate": "2026-10-20",
+      "urgent": false,
+      "completed": false,
+      "createdAt": 1792366748051
+    },
+    {
+      "id": "t4",
+      "title": "[전공] 한국근세사 사료강독 원문 해석 및 발제문 2페이지 요약",
+      "category": "history",
+      "subTag": "사료강독",
+      "dueDate": "2026-10-20",
+      "urgent": true,
+      "completed": false,
+      "createdAt": 1792370348051
+    },
+    {
+      "id": "t5",
+      "title": "[전공] 역사교육론 중학교 역사 수업 시연 지도안 초안 작성",
+      "category": "history",
+      "subTag": "역사교육론",
+      "dueDate": "2026-10-22",
+      "urgent": false,
+      "completed": false,
+      "createdAt": 1792373948051
+    },
+    {
+      "id": "t6",
+      "title": "[전공] 경북대 역사교육과 정기 학술답사 담당 유적지 자료집 정리",
+      "category": "history",
+      "subTag": "학술답사",
+      "dueDate": "2026-10-24",
+      "urgent": false,
+      "completed": true,
+      "createdAt": 1792341548051
+    }
+  ],
+  "ddays": [
+    {
+      "id": "d1",
+      "title": "역사교육과 정기 학술답사",
+      "date": "2026-10-30"
+    },
+    {
+      "id": "d2",
+      "title": "학원 중·고등 기말 내신대비 돌입",
+      "date": "2026-11-06"
+    },
+    {
+      "id": "d3",
+      "title": "경북대 기말고사 시작",
+      "date": "2026-12-03"
+    }
+  ],
+  "salaryConfig": {
+    "rateElem": 15000,
+    "rateMid": 18000,
+    "rateHigh": 22000,
+    "tax33": true
+  },
+  "workLogs": [
+    {
+      "id": "w1",
+      "date": "2026-10-05",
+      "grade": "초등부",
+      "hours": 2,
+      "memo": "초등 5·6학년 연산 및 개념반 수업"
+    },
+    {
+      "id": "w2",
+      "date": "2026-10-07",
+      "grade": "중등부",
+      "hours": 3,
+      "memo": "중2·중3 내신 정규반 수업 및 질의응답"
+    },
+    {
+      "id": "w3",
+      "date": "2026-10-10",
+      "grade": "고등부",
+      "hours": 3.5,
+      "memo": "고1 공통수학 & 고2 미적분 심화반 수업"
+    },
+    {
+      "id": "w4",
+      "date": "2026-10-19",
+      "grade": "중등부",
+      "hours": 2.5,
+      "memo": "중등부 함수 특강 및 초등부 클리닉"
+    }
+  ],
+  "schedules": [
+    {
+      "id": "s1",
+      "day": "월",
+      "type": "history",
+      "time": "10:30~12:00",
+      "name": "한국근세사 (전공)"
+    },
+    {
+      "id": "s2",
+      "day": "월",
+      "type": "math",
+      "time": "17:30~21:30",
+      "name": "초등·중등 수학수업"
+    },
+    {
+      "id": "s3",
+      "day": "화",
+      "type": "history",
+      "time": "13:30~15:00",
+      "name": "역사교육론 (전공)"
+    },
+    {
+      "id": "s4",
+      "day": "화",
+      "type": "math",
+      "time": "18:30~22:00",
+      "name": "고등부 내신·심화반"
+    },
+    {
+      "id": "s5",
+      "day": "수",
+      "type": "history",
+      "time": "10:30~12:00",
+      "name": "동양중세사 (전공)"
+    },
+    {
+      "id": "s6",
+      "day": "수",
+      "type": "math",
+      "time": "17:30~21:30",
+      "name": "초등·중등 수학수업"
+    },
+    {
+      "id": "s7",
+      "day": "목",
+      "type": "history",
+      "time": "15:00~16:30",
+      "name": "사료강독 세미나"
+    },
+    {
+      "id": "s8",
+      "day": "목",
+      "type": "math",
+      "time": "18:30~22:00",
+      "name": "고등부 집중클리닉"
+    },
+    {
+      "id": "s9",
+      "day": "금",
+      "type": "history",
+      "time": "11:00~13:00",
+      "name": "서양근대사 (전공)"
+    },
+    {
+      "id": "s10",
+      "day": "금",
+      "type": "math",
+      "time": "17:30~21:00",
+      "name": "초·중·고 주간테스트"
+    }
+  ]
+}
