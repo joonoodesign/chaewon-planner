@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="채원 플래너" />
+  <meta name="theme-color" content="#8B1E24" />
+  <title>채원이의 스터디 & 티칭 플래너 | 경북대 역사교육과 & 수학강사</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- 상단 헤더 -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand-group">
+        <div class="brand-logo" title="경북대학교 역사교육과 & 수학강사 채원">채</div>
+        <div class="brand-titles">
+          <h1>채원이의 스터디 & 티칭 플래너</h1>
+          <div class="role-badges">
+            <span id="knuGradeBadge" class="role-badge history clickable" title="클릭하여 학번/자동 진급 기준 확인 및 변경">🏛️ 경북대 역사교육과 2학년</span>
+            <span class="role-badge math">📐 초·중·고 수학강사</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="btnOpenTutorial" class="sync-pill" title="플래너 사용법 튜토리얼 보기" style="color:var(--primary); border-color:var(--primary);">
+          <span>📖 사용법 튜토리얼</span>
+        </button>
+        <button id="btnOpenSync" class="sync-pill" title="아이폰·아이패드·PC 동기화 설정">
+          <span id="syncDot" class="sync-dot"></span>
+          <span id="syncStatusText">동기화 설정</span>
+        </button>
+        <button id="btnThemeToggle" class="icon-btn" title="다크 모드 전환" aria-label="테마 전환">🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 컨테이너 -->
+  <main class="main-container">
+
+    <!-- 상단 브리핑 & D-Day 영역 -->
+    <section id="sectionBriefing" class="top-briefing">
+      <div class="briefing-card">
+        <div class="briefing-top">
+          <div>
+            <div id="todayDateDisplay" class="date-display">2026년 10월 19일 월요일</div>
+            <div id="greetingTitle" class="greeting-title">오늘도 역사와 수학을 멋지게 가르치는 하루! ✨</div>
+          </div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-mini">
+            <span id="statRemainTotal" class="num">0</span>
+            <span class="lbl">남은 할 일</span>
+          </div>
+          <div class="stat-mini">
+            <span id="statRemainMath" class="num" style="color: var(--math-color);">0</span>
+            <span class="lbl">학원 수업·준비</span>
+          </div>
+          <div class="stat-mini">
+            <span id="statRemainHistory" class="num" style="color: var(--history-color);">0</span>
+            <span class="lbl">전공·사료·과제</span>
+          </div>
+          <div class="stat-mini">
+            <span id="statMonthPayBrief" class="num" style="color: var(--elem-color);">0원</span>
+            <span class="lbl">이번 달 예상급여</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- D-Day 카운터 카드 -->
+      <div class="briefing-card">
+        <div class="dday-header">
+          <h3>📌 주요 학사 & 학원 D-Day</h3>
+          <button id="btnOpenDdayModal" class="btn-secondary" style="padding: 4px 9px; font-size: 0.74rem;">+ D-Day 추가</button>
+        </div>
+        <div id="ddayList" class="dday-list">
+          <!-- JS 렌더링 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 메인 2단 그리드 -->
+    <div class="workspace-grid">
+
+      <!-- 좌측 컬럼: To-Do List (수학학원 초·중·고 & 역사교육과 전공) -->
+      <section id="sectionTodos" class="left-col">
+        <div class="panel-card">
+          <div class="panel-header">
+            <h2 class="panel-title">✅ 채원이의 맞춤 할 일 (To-Do)</h2>
+            <div style="display:flex; gap:6px;">
+              <button id="btnClearCompleted" class="btn-secondary" style="font-size:0.75rem; padding:5px 10px;">완료 항목 정리</button>
+            </div>
+          </div>
+
+          <!-- 원클릭 빠른 추가 프리셋 -->
+          <div class="preset-section">
+            <div class="preset-label">
+              <span>⚡ 자주 쓰는 할 일 원클릭 추가</span>
+            </div>
+            <div class="preset-scroll">
+              <button class="preset-btn" data-preset='{"title":"[초등부] 연산 교재 채점 및 학부모 피드백 노트","category":"math","subTag":"초등부","urgent":false}'>🌱 + 초등부 채점·피드백</button>
+              <button class="preset-btn" data-preset='{"title":"[중등부] 내신 대비 단원별 오답 프린트 제작","category":"math","subTag":"중등부","urgent":false}'>📘 + 중등부 오답 프린트</button>
+              <button class="preset-btn" data-preset='{"title":"[고등부] 모의고사·내신 심화 문항 풀이 연구","category":"math","subTag":"고등부","urgent":true}'>🎓 + 고등부 심화 풀이준비</button>
+              <button class="preset-btn" data-preset='{"title":"[전공] 주차별 사료 강독 번역 및 요약문 작성","category":"history","subTag":"사료강독","urgent":false}'>📜 + 사료 강독 요약</button>
+              <button class="preset-btn" data-preset='{"title":"[전공] 역사교육론 수업 시연 PPT/지도안 수정","category":"history","subTag":"역사교육론","urgent":false}'>🏛️ + 역사교육론 지도안</button>
+              <button class="preset-btn" data-preset='{"title":"[전공] 정기 학술답사 담당 유적지 조사 보고서","category":"history","subTag":"학술답사","urgent":false}'>🧭 + 학술답사 보고서</button>
+            </div>
+          </div>
+
+          <!-- 할 일 입력 폼 -->
+          <form id="todoForm" class="task-form">
+            <div class="form-row-main">
+              <input type="text" id="todoInput" class="input-text" placeholder="할 일을 입력하세요 (예: 고2 미적분 질문 문항 정리, 동양사 레포트 초안)" required />
+              <button type="submit" class="btn-primary">+ 추가하기</button>
+            </div>
+            <div class="form-row-options">
+              <select id="todoCategory" class="select-box">
+                <option value="math">📐 수학학원 (강사 업무)</option>
+                <option value="history">🏛️ 역사교육과 (전공/학업)</option>
+                <option value="cert">🎯 임용·자격증·루틴</option>
+                <option value="life">🌸 일상·대외활동</option>
+              </select>
+
+              <select id="todoSubTag" class="select-box">
+                <!-- 카테고리에 따라 동적 변경 또는 기본 옵션 제공 -->
+                <option value="초등부">🌱 초등부</option>
+                <option value="중등부">📘 중등부</option>
+                <option value="고등부">🎓 고등부</option>
+                <option value="초·중·고 공통">📐 학원 공통</option>
+              </select>
+
+              <input type="date" id="todoDueDate" class="select-box" title="마감일" />
+
+              <label style="display:inline-flex; align-items:center; gap:4px; font-size:0.8rem; font-weight:700; color:var(--danger); cursor:pointer; margin-left:4px;">
+                <input type="checkbox" id="todoUrgent" style="accent-color:var(--danger);" />
+                🔥 중요/긴급
+              </label>
+            </div>
+          </form>
+
+          <!-- 메인 카테고리 탭 -->
+          <div class="filter-tabs" id="mainFilterTabs">
+            <button class="filter-tab active" data-filter="all">전체 보기</button>
+            <button class="filter-tab" data-filter="math">📐 수학학원</button>
+            <button class="filter-tab" data-filter="history">🏛️ 역사교육과</button>
+            <button class="filter-tab" data-filter="cert">🎯 임용·루틴</button>
+            <button class="filter-tab" data-filter="life">🌸 일상</button>
+          </div>
+
+          <!-- 초·중·고 학년 세부 필터 바 -->
+          <div class="sub-filter-bar" id="gradeFilterBar">
+            <span style="font-size:0.74rem; font-weight:700; color:var(--text-muted); margin-right:2px;">학년/세부 필터:</span>
+            <button class="grade-pill active" data-grade="all">전체</button>
+            <button class="grade-pill" data-grade="초등부">🌱 초등부</button>
+            <button class="grade-pill" data-grade="중등부">📘 중등부</button>
+            <button class="grade-pill" data-grade="고등부">🎓 고등부</button>
+            <button class="grade-pill" data-grade="urgent">🔥 긴급만</button>
+          </div>
+
+          <!-- 할 일 목록 -->
+          <div id="todoListContainer" class="todo-list">
+            <!-- JS 렌더링 -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 우측 컬럼: 초·중·고 시급/급여 정산기 & 주간 시간표 -->
+      <section id="sectionSalaryAndSched" class="right-col">
+
+        <!-- 1. 시급/급여 계산기 패널 -->
+        <div id="panelSalary" class="panel-card">
+          <div class="panel-header">
+            <h2 class="panel-title">💰 초·중·고 수학강사 급여 정산기</h2>
+            <input type="month" id="salaryMonthPicker" class="select-box" style="font-weight:700;" />
+          </div>
+
+          <!-- 이번 달 급여 요약 히어로 -->
+          <div class="salary-hero">
+            <div class="salary-hero-top">
+              <span id="salaryMonthLabel">2026년 10월 실수령 예상액</span>
+              <span id="taxBadgeLabel" style="background:rgba(255,255,255,0.2); padding:2px 8px; border-radius:999px; font-size:0.72rem;">3.3% 공제 적용</span>
+            </div>
+            <div id="salaryNetDisplay" class="salary-net-amount">0원</div>
+            <div class="salary-sub-grid">
+              <div>
+                <span>총 수업시간</span>
+                <strong id="salaryTotalHours">0시간</strong>
+              </div>
+              <div>
+                <span>세전 총 급여</span>
+                <strong id="salaryGrossDisplay">0원</strong>
+              </div>
+              <div>
+                <span>세금 공제(3.3%)</span>
+                <strong id="salaryTaxDisplay">-0원</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- 초등 / 중등 / 고등부별 수업 비중 -->
+          <div class="grade-breakdown">
+            <div class="grade-breakdown-title">
+              <span>📊 학부별 누적 수업시간 & 급여</span>
+              <button id="btnToggleRateConfig" type="button" style="background:none; border:none; color:var(--primary); font-size:0.75rem; font-weight:700; cursor:pointer;">⚙️ 시급/세금 설정</button>
+            </div>
+            <div class="grade-chips-summary">
+              <div class="grade-stat-box">
+                <div class="g-name" style="color:var(--elem-color);">🌱 초등부</div>
+                <div id="elemHoursStat" class="g-hrs">0시간</div>
+                <div id="elemPayStat" class="g-pay">0원</div>
+              </div>
+              <div class="grade-stat-box">
+                <div class="g-name" style="color:var(--mid-color);">📘 중등부</div>
+                <div id="midHoursStat" class="g-hrs">0시간</div>
+                <div id="midPayStat" class="g-pay">0원</div>
+              </div>
+              <div class="grade-stat-box">
+                <div class="g-name" style="color:var(--high-color);">🎓 고등부</div>
+                <div id="highHoursStat" class="g-hrs">0시간</div>
+                <div id="highPayStat" class="g-pay">0원</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 시급 설정 박스 (초·중·고 차등 또는 동일 설정 가능) -->
+          <div id="rateConfigBox" class="rate-config-box" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <strong>⚙️ 학부별 시급 (원/시간) 및 공제 설정</strong>
+              <button id="btnUnifyRates" type="button" class="btn-secondary" style="padding:3px 8px; font-size:0.72rem;">초등 시급으로 통일</button>
+            </div>
+            <div class="rate-grid">
+              <div class="rate-field">
+                <label>🌱 초등부 시급</label>
+                <input type="number" id="rateElem" step="500" min="0" value="15000" />
+              </div>
+              <div class="rate-field">
+                <label>📘 중등부 시급</label>
+                <input type="number" id="rateMid" step="500" min="0" value="18000" />
+              </div>
+              <div class="rate-field">
+                <label>🎓 고등부 시급</label>
+                <input type="number" id="rateHigh" step="500" min="0" value="22000" />
+              </div>
+            </div>
+            <div style="margin-top:10px; display:flex; align-items:center; justify-content:space-between;">
+              <label style="display:inline-flex; align-items:center; gap:6px; font-weight:600; cursor:pointer;">
+                <input type="checkbox" id="chkTax33" checked style="accent-color:var(--primary);" />
+                프리랜서 원천징수 3.3% 세금 공제 계산
+              </label>
+              <button id="btnSaveRates" type="button" class="btn-primary" style="padding:5px 12px; font-size:0.78rem;">설정 저장</button>
+            </div>
+          </div>
+
+          <!-- 근무 일지 등록 폼 -->
+          <form id="workLogForm" class="task-form" style="margin-bottom:12px;">
+            <div style="font-size:0.78rem; font-weight:700; margin-bottom:8px; color:var(--text-muted);">+ 오늘 학원 수업/근무 시간 기록하기</div>
+            <div class="form-row-options" style="margin-bottom:8px;">
+              <input type="date" id="workDate" class="select-box" required />
+              <select id="workGrade" class="select-box">
+                <option value="초등부">🌱 초등부 수업</option>
+                <option value="중등부" selected>📘 중등부 수업</option>
+                <option value="고등부">🎓 고등부 수업</option>
+              </select>
+              <input type="number" id="workHours" class="select-box" style="width:95px;" step="0.5" min="0.5" max="15" placeholder="시간(예: 3)" value="2.5" required />
+            </div>
+            <div class="form-row-main" style="margin-bottom:0;">
+              <input type="text" id="workMemo" class="input-text" placeholder="수업 내용 (예: 중2 함수 진도 + 고1 모의고사 보강)" />
+              <button type="submit" class="btn-primary">기록 추가</button>
+            </div>
+          </form>
+
+          <!-- 이번 달 근무 기록 목록 -->
+          <div style="font-size:0.78rem; font-weight:700; color:var(--text-muted); margin-bottom:6px;">📝 이번 달 근무 기록 내역</div>
+          <div id="workLogList" class="work-log-list">
+            <!-- JS 렌더링 -->
+          </div>
+        </div>
+
+        <!-- 2. 주간 학교(경북대) & 수학학원 출강 타임테이블 -->
+        <div id="panelSchedule" class="panel-card">
+          <div class="panel-header">
+            <h2 class="panel-title">📅 주간 대학 강의 & 학원 출강표</h2>
+            <button id="btnAddSchedModal" class="btn-secondary" style="font-size:0.75rem; padding:5px 10px;">+ 일정 편집</button>
+          </div>
+          <div id="timetableGrid" class="timetable-grid">
+            <!-- JS 렌더링 -->
+          </div>
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- 아이폰/모바일 전용 하단 탭 바 -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-mobtab="all">
+      <span class="nav-icon">🏠</span>
+      <span>전체</span>
+    </button>
+    <button class="nav-item" data-mobtab="todos">
+      <span class="nav-icon">✅</span>
+      <span>할 일</span>
+    </button>
+    <button class="nav-item" data-mobtab="salary">
+      <span class="nav-icon">💰</span>
+      <span>급여정산</span>
+    </button>
+    <button class="nav-item" data-mobtab="schedule">
+      <span class="nav-icon">📅</span>
+      <span>시간표·D-Day</span>
+    </button>
+    <button class="nav-item" data-mobtab="sync">
+      <span class="nav-icon">☁️</span>
+      <span>동기화</span>
+    </button>
+  </nav>
+
+  <!-- 모달 1: 아이폰 · 아이패드 · PC 실시간 동기화 설정 -->
+  <div id="syncModal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>☁️ 아이폰 · 아이패드 · PC 실시간 동기화</h2>
+        <button id="btnCloseSyncModal" class="icon-btn">✕</button>
+      </div>
+
+      <!-- 동기화 방식 1: 로컬 서버 / 와이파이 즉시 동기화 -->
+      <div class="sync-method-box">
+        <h4>🏠 1. 홈 서버 자동 동기화 (PC + 아이폰 + 아이패드)</h4>
+        <p id="localServerDesc">PC에서 실행 중인 동기화 서버와 자동으로 데이터를 주고받습니다. 아래 주소를 아이폰/아이패드 Safari로 열거나 QR코드를 스캔하면 <strong>별도 설정 없이 즉시 실시간 동기화</strong>됩니다.</p>
+        <div id="localServerUrlBox" style="background:var(--bg-card); padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); font-size:0.78rem; font-family:monospace; word-break:break-all; margin-bottom:8px;">
+          확인 중...
+        </div>
+        <div id="qrContainer" class="qr-box" style="display:none;">
+          <img id="qrImage" alt="아이폰/아이패드 접속 QR코드" style="width:150px; height:150px;" />
+          <span style="font-size:0.74rem; color:#333; margin-top:6px; font-weight:600;">📱 아이폰/아이패드 카메라로 스캔 후 '홈 화면에 추가'하세요!</span>
+        </div>
+      </div>
+
+      <!-- 동기화 방식 2: 내 구글 드라이브(Google Drive) DB 연동 (가장 추천!) -->
+      <div class="sync-method-box" style="border-color:var(--primary); background:var(--primary-soft);">
+        <h4>☁️ 2. 내 구글 드라이브(Google Drive)로 DB 관리 (컴퓨터 꺼도 24시간 동기화 ⭐)</h4>
+        <p style="color:var(--text-main);">
+          별도 유료 서버 없이 <strong>내 구글 드라이브에 <code>chaewon_planner_db.json</code> 파일로 자동 저장</strong>됩니다. 컴퓨터를 꺼놓아도 채원이가 학교·학원에서 아이폰·아이패드로 언제든 동기화할 수 있습니다.
+        </p>
+        <div style="background:var(--bg-card); padding:10px 12px; border-radius:8px; border:1px solid var(--border-color); font-size:0.77rem; margin-bottom:10px; line-height:1.6;">
+          <strong>🚀 1분 구글 드라이브 연결 순서:</strong><br/>
+          1️⃣ 아래 <strong>[📋 구글 드라이브 DB 스크립트 복사]</strong> 버튼을 누릅니다.<br/>
+          2️⃣ <a href="https://script.google.com" target="_blank" style="color:var(--primary); font-weight:700;">구글 앱스 스크립트(script.google.com)</a> 접속 → <strong>[새 프로젝트]</strong> 클릭 → 기존 코드를 지우고 붙여넣기 후 저장(<code>Ctrl+S</code>)<br/>
+          3️⃣ 우측 상단 <strong>[배포] → [새 배포]</strong> → 유형: <strong>[웹 앱]</strong> 선택 → 액세스 권한: <strong>[모든 사용자]</strong> 선택 후 배포!<br/>
+          4️⃣ 발급된 <strong>웹 앱 URL (<code>https://script.google.com/macros/s/.../exec</code>)</strong>을 아래 칸에 붙여넣으면 완료!
+        </div>
+        <div style="margin-bottom:8px;">
+          <button id="btnCopyGDriveScript" type="button" class="btn-secondary" style="width:100%; font-weight:700; border-color:var(--primary); color:var(--primary);">
+            📋 1단계: 구글 드라이브 DB 스크립트 코드 원클릭 복사
+          </button>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <input type="url" id="cloudDbUrlInput" class="input-text" placeholder="구글 드라이브 웹 앱 URL (https://script.google.com/macros/s/.../exec) 붙여넣기" />
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="cloudRoomKeyInput" class="input-text" placeholder="동기화 방 코드 (예: chaewon-knu-2026)" value="chaewon-knu-2026" style="display:none;" />
+            <button id="btnSaveCloudSync" type="button" class="btn-primary" style="width:100%;">☁️ 구글 드라이브 DB 연결 & 즉시 동기화</button>
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
+            <button id="btnCopySyncLink" type="button" class="btn-secondary" style="font-size:0.75rem;">🔗 채원이 전달용 자동연결 링크 복사</button>
+            <button id="btnForcePullCloud" type="button" class="btn-secondary" style="font-size:0.75rem;">⬇️ 구글 드라이브에서 불러오기</button>
+            <button id="btnForcePushCloud" type="button" class="btn-secondary" style="font-size:0.75rem;">⬆️ 구글 드라이브에 지금 저장</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 동기화 방식 3: JSON 파일 백업 & 복원 -->
+      <div class="sync-method-box" style="margin-bottom:0;">
+        <h4>💾 3. 파일 백업 내보내기 / 가져오기 (카카오톡·AirDrop 전송용)</h4>
+        <p>데이터를 파일로 저장하여 AirDrop이나 카카오톡 나에게 보내기로 아이폰·아이패드·PC 간에 즉시 옮길 수도 있습니다.</p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button id="btnExportJson" type="button" class="btn-secondary">📥 백업 파일 저장 (.json)</button>
+          <label class="btn-secondary" style="cursor:pointer; display:inline-block;">
+            📤 백업 파일 불러오기
+            <input type="file" id="inputImportJson" accept=".json" style="display:none;" />
+          </label>
+          <button id="btnResetDemoData" type="button" class="btn-secondary" style="color:var(--danger);">🔄 기본 샘플 데이터 복원</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 모달 2: D-Day 추가 모달 -->
+  <div id="ddayModal" class="modal-backdrop">
+    <div class="modal-card" style="max-width:400px;">
+      <div class="modal-header">
+        <h2>📌 D-Day 일정 추가</h2>
+        <button id="btnCloseDdayModal" class="icon-btn">✕</button>
+      </div>
+      <form id="ddayForm" style="display:flex; flex-direction:column; gap:10px;">
+        <input type="text" id="ddayTitleInput" class="input-text" placeholder="일정 이름 (예: 역사교육과 추계 정기답사, 기말고사)" required />
+        <input type="date" id="ddayDateInput" class="input-text" required />
+        <button type="submit" class="btn-primary">D-Day 등록</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 모달 3: 주간 시간표 추가 모달 -->
+  <div id="schedModal" class="modal-backdrop">
+    <div class="modal-card" style="max-width:420px;">
+      <div class="modal-header">
+        <h2>📅 주간 고정 일정 추가</h2>
+        <button id="btnCloseSchedModal" class="icon-btn">✕</button>
+      </div>
+      <form id="schedForm" style="display:flex; flex-direction:column; gap:10px;">
+        <select id="schedDayInput" class="select-box">
+          <option value="월">월요일</option>
+          <option value="화">화요일</option>
+          <option value="수">수요일</option>
+          <option value="목">목요일</option>
+          <option value="금">금요일</option>
+        </select>
+        <select id="schedTypeInput" class="select-box">
+          <option value="history">🏛️ 경북대 전공/교직 수업</option>
+          <option value="math">📐 수학학원 출강</option>
+        </select>
+        <input type="text" id="schedTimeInput" class="input-text" placeholder="시간대 (예: 10:30~12:00 또는 18:00~22:00)" required />
+        <input type="text" id="schedNameInput" class="input-text" placeholder="과목/수업명 (예: 한국근현대사강독 / 중2·고1 수학수업)" required />
+        <button type="submit" class="btn-primary">시간표에 추가</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 모달 4: 인터랙티브 사용법 튜토리얼 모달 -->
+  <div id="tutorialModal" class="modal-backdrop">
+    <div class="modal-card" style="max-width:560px;">
+      <div class="modal-header">
+        <h2>📖 채원이 플래너 1분 완벽 사용 가이드</h2>
+        <button id="btnCloseTutorialModal" class="icon-btn">✕</button>
+      </div>
+
+      <!-- 상단 단계 인디케이터 -->
+      <div class="tutorial-steps-indicator" id="tutDots">
+        <div class="tut-dot active" data-step="0"></div>
+        <div class="tut-dot" data-step="1"></div>
+        <div class="tut-dot" data-step="2"></div>
+        <div class="tut-dot" data-step="3"></div>
+        <div class="tut-dot" data-step="4"></div>
+      </div>
+
+      <!-- STEP 1: 환영 및 자동 학년 전환 소개 -->
+      <div class="tutorial-slide active" data-slide="0">
+        <div class="tut-hero-box">
+          <span class="tut-step-badge">STEP 1 / 5 · 맞춤형 플래너 소개</span>
+          <div class="tut-title">🎓 경북대 역사교육과 & 수학강사 채원이를 위한 전용 공간</div>
+          <p class="tut-desc">학교 전공 공부와 초·중·고 수학학원 강사 알바를 한 화면에서 헷갈리지 않고 관리할 수 있도록 설계되었습니다.</p>
+          <ul class="tut-feature-list">
+            <li>
+              <span>🏛️</span>
+              <div><strong>자동 학년 & 학기 진급 시스템</strong><br/>해가 바뀌면 <code>2학년 → 3학년 → 4학년</code> 및 <code>1학기/방학/2학기</code>가 날짜에 맞춰 자동으로 변경됩니다. (상단 학년 배지를 눌러 기준 학번이나 휴학 보정도 가능해요!)</div>
+            </li>
+            <li>
+              <span>📊</span>
+              <div><strong>오늘의 집중 브리핑 & D-Day</strong><br/>상단 요약판에서 남은 학원 업무, 전공 과제 수, 이번 달 예상 실수령액, 그리고 정기 학술답사·시험 D-Day를 한눈에 확인하세요.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- STEP 2: 할 일 & 원클릭 프리셋 -->
+      <div class="tutorial-slide" data-slide="1">
+        <div class="tut-hero-box">
+          <span class="tut-step-badge">STEP 2 / 5 · 할 일 & 초·중·고 관리</span>
+          <div class="tut-title">✅ 원클릭 템플릿과 초·중·고 학부별 필터</div>
+          <p class="tut-desc">매주 반복되는 학원 채점·프린트 준비와 사료 강독 과제를 일일이 타이핑할 필요가 없습니다.</p>
+          <ul class="tut-feature-list">
+            <li>
+              <span>⚡</span>
+              <div><strong>원클릭 빠른 추가 버튼</strong><br/>할 일 상단의 <code>🌱 + 초등부 채점·피드백</code>, <code>📘 + 중등부 오답 프린트</code>, <code>🎓 + 고등부 심화 풀이준비</code>, <code>📜 + 사료 강독 요약</code> 버튼을 누르면 1초 만에 오늘 할 일로 등록됩니다.</div>
+            </li>
+            <li>
+              <span>🔍</span>
+              <div><strong>초·중·고 학년별 & 전공별 필터</strong><br/>학원 출강 직전에는 <code>📐 수학학원</code> 탭이나 <code>🌱 초등부</code> · <code>📘 중등부</code> · <code>🎓 고등부</code> 버튼만 눌러 오늘 수업할 학년 준비물만 빠르게 체크하세요.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- STEP 3: 시급 & 급여 정산기 -->
+      <div class="tutorial-slide" data-slide="2">
+        <div class="tut-hero-box">
+          <span class="tut-step-badge">STEP 3 / 5 · 시급 & 급여 정산기</span>
+          <div class="tut-title">💰 초·중·고 학부별 시급 설정 & 3.3% 자동 계산</div>
+          <p class="tut-desc">초등·중등·고등부 시급이 달라도, 혹은 같아도 정확하게 이번 달 급여를 계산해 줍니다.</p>
+          <ul class="tut-feature-list">
+            <li>
+              <span>⚙️</span>
+              <div><strong>학부별 시급 설정</strong><br/>급여 정산기 우측의 <code>⚙️ 시급/세금 설정</code>을 눌러 초등·중등·고등부 시급을 각각 입력하거나 <code>초등 시급으로 통일</code> 버튼으로 한 번에 맞출 수 있습니다.</div>
+            </li>
+            <li>
+              <span>🧾</span>
+              <div><strong>3.3% 세금 공제 & 수업 시간 기록</strong><br/>수업이 끝난 날 학년과 시간(예: <code>중등부 2.5시간</code>)만 기록하면 세전 급여, 3.3% 세금 공제액, 실수령 예상액과 학부별 수업 비중이 자동 집계됩니다.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- STEP 4: 주간 시간표 & D-Day -->
+      <div class="tutorial-slide" data-slide="3">
+        <div class="tut-hero-box">
+          <span class="tut-step-badge">STEP 4 / 5 · 시간표 & 학사 일정</span>
+          <div class="tut-title">📅 대학 전공 강의와 학원 출강 시간을 한눈에</div>
+          <p class="tut-desc">낮에는 경북대 역사교육과 수업, 저녁에는 수학학원 출강 일정을 요일별로 비교할 수 있습니다.</p>
+          <ul class="tut-feature-list">
+            <li>
+              <span>🗓️</span>
+              <div><strong>오늘 요일 자동 하이라이트</strong><br/>주간 시간표에서 오늘 요일 기둥이 자동으로 강조 표시되며, <code>+ 일정 편집</code> 버튼으로 새 학기 시간표를 자유롭게 수정할 수 있습니다.</div>
+            </li>
+            <li>
+              <span>📌</span>
+              <div><strong>주요 학사 & 학원 D-Day</strong><br/>정기 학술답사, 중간·기말고사, 학원 내신대비 개강일 등을 등록해 두면 남은 날짜(<code>D-11</code> 등)를 매일 자동으로 카운트다운합니다.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- STEP 5: 아이폰 · 아이패드 · PC 동기화 -->
+      <div class="tutorial-slide" data-slide="4">
+        <div class="tut-hero-box">
+          <span class="tut-step-badge">STEP 5 / 5 · 멀티 기기 동기화</span>
+          <div class="tut-title">☁️ 아이폰 · 아이패드 · 컴퓨터 완벽 연동</div>
+          <p class="tut-desc">집에서는 컴퓨터로, 학교와 학원에서는 아이폰·아이패드로 언제 어디서나 이어서 쓰세요.</p>
+          <ul class="tut-feature-list">
+            <li>
+              <span>📱</span>
+              <div><strong>QR 스캔 & 홈 화면에 앱으로 추가</strong><br/>우측 상단 <code>☁️ 동기화</code> 버튼을 눌러 QR코드를 아이폰/아이패드로 스캔한 뒤, Safari 공유 버튼(⬆️) → <strong>[홈 화면에 추가]</strong>를 누르면 진짜 앱처럼 설치됩니다!</div>
+            </li>
+            <li>
+              <span>🌐</span>
+              <div><strong>외부 LTE/5G 클라우드 & 파일 백업</strong><br/>집 밖에서도 자동 연동되는 클라우드 DB 주소 연결 기능과, 카카오톡·AirDrop으로 데이터를 바로 옮길 수 있는 백업 파일 저장 기능을 모두 지원합니다.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 튜토리얼 하단 버튼 -->
+      <div class="tut-footer">
+        <label style="display:inline-flex; align-items:center; gap:6px; font-size:0.78rem; color:var(--text-muted); cursor:pointer;">
+          <input type="checkbox" id="chkHideTutorialAuto" style="accent-color:var(--primary);" />
+          다음 접속 시 자동으로 띄우지 않기
+        </label>
+        <div style="display:flex; gap:8px;">
+          <button type="button" id="btnTutPrev" class="btn-secondary" style="display:none;">이전</button>
+          <button type="button" id="btnTutNext" class="btn-primary">다음 단계 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 모달 5: 경북대 역사교육과 자동 학년 변경 설정 모달 -->
+  <div id="gradeConfigModal" class="modal-backdrop">
+    <div class="modal-card" style="max-width:430px;">
+      <div class="modal-header">
+        <h2>🏛️ 경북대 역사교육과 자동 학년 설정</h2>
+        <button id="btnCloseGradeModal" class="icon-btn">✕</button>
+      </div>
+      <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:12px;">
+        입학 연도(학번)를 기준으로 매년 <strong>자동으로 학년과 학기(1학기·여름방학·2학기·겨울방학)가 계산</strong>되어 상단 배지와 인사말에 반영됩니다.
+      </p>
+      <form id="gradeConfigForm" style="display:flex; flex-direction:column; gap:12px;">
+        <div>
+          <label style="display:block; font-size:0.78rem; font-weight:700; margin-bottom:4px;">🎓 입학 연도 (기준 학번)</label>
+          <select id="selectAdmissionYear" class="select-box" style="width:100%;">
+            <option value="2024">2024년 입학 (24학번)</option>
+            <option value="2025" selected>2025년 입학 (25학번 · 2026년 현재 2학년)</option>
+            <option value="2026">2026년 입학 (26학번)</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block; font-size:0.78rem; font-weight:700; margin-bottom:4px;">⚙️ 학년 수동 보정 (휴학 등 예외 시)</label>
+          <select id="selectGradeOffset" class="select-box" style="width:100%;">
+            <option value="0" selected>자동 계산 그대로 사용 (매년 자동 진급)</option>
+            <option value="-1">-1학년 보정 (1년 휴학 등)</option>
+            <option value="+1">+1학년 보정</option>
+          </select>
+        </div>
+        <div id="gradePreviewBox" style="background:var(--bg-subtle); padding:10px 12px; border-radius:8px; font-size:0.8rem; font-weight:600; color:var(--primary);">
+          현재 표시: 🏛️ 경북대 역사교육과 2학년 (2학기)
+        </div>
+        <button type="submit" class="btn-primary">자동 학년 설정 저장</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
